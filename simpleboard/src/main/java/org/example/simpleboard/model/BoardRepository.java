@@ -18,4 +18,6 @@ public interface BoardRepository {
     void dao_delete(int num);
     //개수
     int dao_getCount(HashMap<String,Object> map);
+    //조회수 증가
+    void upReadCount(int num);
 }

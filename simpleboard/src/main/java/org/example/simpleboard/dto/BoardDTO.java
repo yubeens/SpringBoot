@@ -1,6 +1,8 @@
 package org.example.simpleboard.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
@@ -14,5 +16,4 @@ public class BoardDTO {
     private Date regdate;
     private int hitcount;
     private int replyCnt;
-
 }

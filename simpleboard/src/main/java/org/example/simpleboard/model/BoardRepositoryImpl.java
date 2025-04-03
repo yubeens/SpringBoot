@@ -10,36 +10,40 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class BoardRepositoryImpl implements BoardRepository {
-    private BoardMapper boardMapper;
+public class BoardRepositoryImpl  implements BoardRepository {
+    private final BoardMapper boardMapper;
     @Override
     public void dao_insert(BoardDTO board) {
         boardMapper.insert(board);
-
     }
 
     @Override
     public List<BoardDTO> dao_findAll(HashMap<String, Object> map) {
-        return List.of();
+        return boardMapper.findAll(map);
     }
 
     @Override
     public BoardDTO dao_findByNum(int num) {
-        return null;
+        return boardMapper.findById(num);
     }
 
     @Override
     public void dao_update(BoardDTO board) {
-
+        boardMapper.update(board);
     }
 
     @Override
     public void dao_delete(int num) {
-
+        boardMapper.delete(num);
     }
 
     @Override
     public int dao_getCount(HashMap<String, Object> map) {
-        return 0;
+        return boardMapper.count(map);
+    }
+
+    @Override
+    public void upReadCount(int num) {
+        boardMapper.upReadCount(num);
     }
 }

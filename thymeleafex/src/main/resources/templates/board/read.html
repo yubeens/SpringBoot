@@ -1,50 +1,46 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/basic.html}"
-      lang="en">
+      layout:decorate="~{layout/basic.html}" lang="en">
 <div layout:fragment="content">
     <div class="card">
         <div class="card-body">
-            <div class="card-title">게시글 등록</div>
+            <h5 class="card-title">게시글 상세보기</h5>
+            <!-- /*     <form method="post" action="/board/register"> */-->
             <div class="mb-3">
-                <label for="bno" class="form-label">Bno</label>
-                <input type="text" class="form-control" name="bno" id="bno" th:value="${board.bno}">
+                <label class="form-label">Bno</label>
+                <input type="text" class="form-control" name="title" th:value="${board.bno}" readonly>
             </div>
             <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control" name="title" id="title" th:value="${board.title}">
+                <label class="form-label">Title</label>
+                <input type="text" class="form-control" name="title" th:value="${board.title}" readonly>
             </div>
             <div class="mb-3">
-                <label for="content" class="form-label">Content</label>
-                <textarea class="form-control" name="content" id="content" rows="3">[[${board.content}]]</textarea>
+                <label class="form-label">Content</label>
+                <textarea class="form-control" name="content" rows="3" readonly>[[${board.content}]]</textarea>
             </div>
             <div class="mb-3">
-                <label for="author" class="form-label">Author</label>
-                <input type="text" class="form-control" name="author" id="author" th:value="${board.author}">
+                <label class="form-label">Author</label>
+                <input type="text" class="form-control" name="Author" th:value="${board.Author}" readonly>
             </div>
             <div class="mb-3">
-                <label for="postdate" class="form-label">PostDate</label>
-                <input type="text" class="form-control" name="postdate" id="postdate" th:value="${board.postdate}">
+                <label class="form-label">VisitCount</label>
+                <input type="text" class="form-control" name="visitcount" th:value="${board.readcount}" readonly>
             </div>
             <div class="mb-3">
-                <label for="readcount" class="form-label">ReadCount</label>
-                <input type="text" class="form-control" name="readcount" id="readcount" th:value="${board.readcount}">
+                <label class="form-label">PostDate</label>
+                <input type="text" class="form-control" name="postdate" th:value="${board.postdate}" readonly>
             </div>
-            <button type="button" class="btn btn-primary">Modify</button>
-            <button type="button" class="btn btn-danger">Remove</button>
-            <button type="button" class="btn btn-secondary">List</button>
+            <div class="mb-3">
+                <a th:href="@{/board/modify(bno=${board.bno})}">
+                    <button type="button" class="btn btn-primary">Modify</button>
+                </a>
+                <a th:href="@{/board/list}">
+                    <button type="button" class="btn btn-secondary">Board List</button>
+                </a>
+            </div>
+            <!--/*      </form> */-->
         </div>
-        <script>
-            document.querySelector(".btn-primary").addEventListener("click",function (e){
-                self.location=`/board/modify?bno=${board.bno}`
-            })
-            document.querySelector(".btn-danger").addEventListener("click",function (e){
-                self.location=`/board/remove?bno=${board.bno}`
-            })
-            document.querySelector(".btn-secondary").addEventListener("click",function (e){
-                self.location="/board/list"
-            })
-        </script>
     </div>
+
 </div>
