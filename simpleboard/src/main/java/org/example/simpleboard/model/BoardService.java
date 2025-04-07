@@ -20,4 +20,9 @@ public interface BoardService {
     void delete(int num);
     //개수
     int getCount(HashMap<String,Object> map);
+
+    /// /////
+    //파일
+    void fileInsert(FileBoardDTO fileBoardDTO);
+    List<FileBoardDTO> fileList();
 }

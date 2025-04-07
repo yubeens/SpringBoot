@@ -8,12 +8,18 @@ import java.util.List;
 
 @Mapper
 public interface BoardMapper {
+    //file board
+    @Insert("insert into fileboard(title, writer, content, fileimage)"+
+            "values(#{title},#{writer},#{content},#{fileimage})")
+    void fileInsert(FileBoardDTO fileBoardDTO);
+    //파일추가
+    //파일리스트
     //추가
     @Insert("insert into boards(title, writer, content) " +
             " values(#{title},#{writer},#{content})")
     void insert(BoardDTO board);
     //전체보기
-    @Select("select * from boards")
+    //@Select("select * from boards")
     List<BoardDTO> findAll(HashMap<String, Object> map);
     //상세보기
     @Select("select * from boards where num=#{num}")
@@ -26,13 +32,16 @@ public interface BoardMapper {
     @Delete("delete from boards where num=#{num}")
     void delete(int num);
     //개수
-    @Select("select count(*) from boards")
+    //@Select("select count(*) from boards")
     int count(HashMap<String, Object> map);
     //조회수 증가
     @Update("update boards set hitcount= hitcount+1 where num = #{num}")
     void upReadCount(int num);
-    //////
-    //replyCnt 증감
-    @Update("update boards set replyCnt= replyCnt+ #{amount} where num=#{bnum}")
-    void replyCnt(@Param("bnum") int bnum, @Param("amount") int amount);
+    ////////////
+    //replyCnt  증감
+    @Update("update boards " +
+            " set replyCnt = replyCnt+ #{amount} where num=#{bnum}")
+    void replyCnt(@Param("bnum") int bnum,
+                  @Param("amount") int amount);
+
 }

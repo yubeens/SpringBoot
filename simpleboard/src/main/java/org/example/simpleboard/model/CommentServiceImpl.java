@@ -18,7 +18,7 @@ public class CommentServiceImpl
     @Override
     @Transactional
     public void insert(CommentDTO comment) {
-        //replyCnt 1증가
+        //replyCnt 1 증가
         boardMapper.replyCnt(comment.getBnum(),1);
         commentMapper.insert(comment);
     }
@@ -28,13 +28,14 @@ public class CommentServiceImpl
         return commentMapper.selectAll(bnum);
     }
 
+
     //삭제
     @Override
     @Transactional
     public void delete(int cnum) {
         //댓글 개수 -1
         CommentDTO commentDTO = commentMapper.read(cnum);
-        boardMapper.replyCnt(commentDTO.getBnum(),-1);
+        boardMapper.replyCnt(commentDTO.getBnum(), -1);
         commentMapper.delete(cnum);
 
     }

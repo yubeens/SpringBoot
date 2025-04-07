@@ -50,46 +50,45 @@
 		}).done(function (resp){
 			let str ="";
 			$.each(resp.clist, function(key,val){
-				str += val.userid +" "
-				str += val.content +" "
+				str += val.userid +"  "
+				str += val.content +"  "
 				str += val.regdate +" "
 				str += "<a href='javascript:fdel("+val.cnum+")'>삭제</a><br/>"
-				str += "<button type='button' id='btnDel' data-mid="+val.cnum+" >삭제</button><br/>"
+				str += "<button type='button' id='btnDel' data-mid="+val.cnum+">삭제</button><br/>"
 			})
 			$(".cntSpan").html(resp.count)
 			$("#result").html(str)
 		}).fail(function (e){
 			alert("실패 :" + e)
 		})
+
 	}
 	//댓글삭제 button
 	const delfun = function (){
 		$.ajax({
 			type:'DELETE',
-			url : "/reply/delete/"+$(this).data('mid')
-		}).done(function (resp){
+			url: "/reply/delete/"+$(this).data('mid')
+		}).done(function (resp) {
 			alert(resp + "번 삭제 성공")
 			init()
-		}).fail(function (e){
+		}).fail(function (e) {
 			alert("삭제 실패 :" + e)
 		})
 	}
 	$("#result").on("click","#btnDel",delfun)
-
 	//////////
 	//댓글삭제
-	function fdel(cnum){
+	function  fdel(cnum){
 		$.ajax({
 			type:"DELETE",
 			url:"/reply/delete/"+cnum
-		}).done(function (resp){
+		}).done(function (resp) {
 			alert(resp+ " 번 삭제 성공")
 			init()
-		}).fail(function (e){
+		}).fail(function (e) {
 			alert("삭제 실패 : "+e)
 		})
 	}
-
 	//댓글추가
 	$("#btnComment").click(function(){
 		if($("#msg").val() ==""){
@@ -106,6 +105,7 @@
 			contentType:"application/json;charset=utf-8",
 			data : JSON.stringify(dataVal),
 			success:function (resp){
+				$("#msg").val("");
 				alert("댓글추가 성공")
 				init()
 			},

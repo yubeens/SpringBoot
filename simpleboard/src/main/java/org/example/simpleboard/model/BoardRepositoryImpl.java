@@ -1,15 +1,16 @@
 package org.example.simpleboard.model;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.example.simpleboard.dto.BoardDTO;
 import org.example.simpleboard.mapper.BoardMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
-
-@Repository
+@Log4j2
 @RequiredArgsConstructor
+@Repository
 public class BoardRepositoryImpl  implements BoardRepository {
     private final BoardMapper boardMapper;
     @Override
@@ -19,6 +20,7 @@ public class BoardRepositoryImpl  implements BoardRepository {
 
     @Override
     public List<BoardDTO> dao_findAll(HashMap<String, Object> map) {
+        log.info("dao_findAll map: " + map);
         return boardMapper.findAll(map);
     }
 

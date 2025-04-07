@@ -11,8 +11,8 @@ import java.util.List;
 @Mapper
 public interface CommentMapper {
     //추가
-    @Insert("insert into commentboard(userid, content, bnum)"+
-            " values(#{userid}, #{content}, #{bnum})")
+    @Insert("insert into commentboard(userid, content, bnum)" +
+            " values(#{userid}, #{content},#{bnum})")
     void insert(CommentDTO comment);
     //전체보기
     @Select("select * from commentboard where bnum=#{bnum}")
@@ -20,7 +20,7 @@ public interface CommentMapper {
     //삭제
     @Delete("delete from commentboard where cnum=#{cnum}")
     void delete(int cnum);
-    //read
+    // read
     @Select("select * from commentboard where cnum=#{cnum}")
     CommentDTO read(int cnum);
 

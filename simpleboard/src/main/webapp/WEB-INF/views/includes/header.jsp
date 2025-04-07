@@ -14,7 +14,7 @@
 <body>
 <nav class="navbar navbar-expand-sm bg-danger navbar-dark">
 	<div class="container-fluid">
-		<ul class="navbar-nav">
+		<ul class="navbar-nav mr-auto">
 			<li class="nav-item">
 				<a class="nav-link active" href="#">HOME</a>
 			</li>
@@ -24,6 +24,37 @@
 			<li class="nav-item">
 				<a class="nav-link" href="/board/list">BOARDLIST</a>
 			</li>
+
+			<li class="nav-item">
+				<a class="nav-link" href="/fileInsert">FILEBOARDINSERT</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/fileList">FILEBOARDLIST</a>
+			</li>
+
+			<li class="nav-item">
+				<a class="nav-link" href="/uploadFile">파일업로드</a>
+			</li>
+		</ul>
+		<ul class="navbar-nav">
+			<c:choose>
+				<c:when test="${empty sessionScope.sMember}">
+					<li class="nav-item">
+						<a class="nav-link" href="/member/login">로그인</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/member/join">회원가입</a>
+					</li>
+				</c:when>
+				<c:otherwise>
+					<li class="nav-item">
+						<a class="nav-link" href="/member/logout">로그아웃(${sMember.name})</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/member/update">회원수정</a>
+					</li>
+				</c:otherwise>
+			</c:choose>
 		</ul>
 
 	</div>
