@@ -2,8 +2,13 @@ package com.example.jpa01.service;
 
 import com.example.jpa01.domain.Board;
 import com.example.jpa01.dto.BoardDTO;
+import com.example.jpa01.dto.PageRequestDTO;
+import com.example.jpa01.dto.PageResponseDTO;
 import com.example.jpa01.repository.BoardRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,19 +16,15 @@ import java.util.stream.Collectors;
 
 
 @Service
+@Log4j2
 public class BoardServiceImpl implements BoardService {
     @Autowired
-    BoardRepository boardRepository;
+    private BoardRepository boardRepository;
 
     @Override
     public void registerBoard(BoardDTO boardDTO) {
-        Board board = dtoToEntity(boardDTO);
+        Board board=dtoToEntity(boardDTO);
         boardRepository.save(board);
-    }
-
-    @Override
-    public void registerBoard(Board boardDTO) {
-
     }
 
     @Override
@@ -31,25 +32,18 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findById(id).get();
         board.updateReadcount();
         boardRepository.save(board);
-        BoardDTO boardDTO = entityToDto(board);
+        BoardDTO boardDTO=entityToDto(board);
         return boardDTO;
     }
 
     @Override
     public void updateBoard(BoardDTO boardDTO) {
-        Board board1 = boardRepository.findById(boardDTO.getBno()).get();
-        /* change 함수 활용법*/
+        Board board1=boardRepository.findById(boardDTO.getBno()).get();
         board1.change(boardDTO.getTitle(), boardDTO.getContent());
-        /* 따로 함수를 안만들었을때 방법 */
-//        board1.setContent(boardDTO.getContent());
-//        board1.setAuthor(boardDTO.getAuthor());
-//        board1.setTitle(boardDTO.getTitle());
+//        board1.setContent(board.getContent());
+//        board1.setAuthor(board.getAuthor());
+//        board1.setTitle(board.getTitle());
         boardRepository.save(board1);
-    }
-
-    @Override
-    public void updateBoard(Board board) {
-
     }
 
     @Override
@@ -58,15 +52,38 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardDTO> readAllBoards() {
-        List<Board> boards = boardRepository.findAll();
-        List<BoardDTO> boardDTOs = boards.stream()
+    public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO) {
+        Pageable pageable=pageRequestDTO.getPageable("bno");
+//        Page<Board> result=boardRepository.findAll(pageable);
+        Page<Board> result=boardRepository
+                .searchTitle(pageRequestDTO.getKeyword(),pageable);
+
+        List<BoardDTO> dtoList=result.getContent().stream()
                 .map(board -> entityToDto(board))
                 .collect(Collectors.toList());
-//        List<BoardDTO> boardDTOList=new ArrayList<>();
-//        for (Board board : boards) {
-//            boardDTOList.add(boardToBoardDTO(board));
-//        }
-        return boardDTOs;
+
+        return PageResponseDTO.<BoardDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build();
     }
+
+//    @Override
+//    public List<BoardDTO> readAllBoards() {
+//        Pageable pageable= PageRequest.of(1, 5,
+//                Sort.by("bno").descending());
+//        List<Board> boards = boardRepository.findAll(pageable).getContent();
+//
+//        List<BoardDTO> boardDTOS=boards.stream()
+//                .map(board -> entityToDto(board))
+//                .collect(Collectors.toList());
+//
+//        List<BoardDTO> boardDTOList=new ArrayList<>();
+//            for (Board board : boards) {
+//            boardDTOList.add(boardToBoardDTO(board));
+//       }
+//
+//        return boardDTOS;
+//    }
 }

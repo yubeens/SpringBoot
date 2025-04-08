@@ -2,6 +2,8 @@ package com.example.jpa01.controller;
 
 import com.example.jpa01.domain.Board;
 import com.example.jpa01.dto.BoardDTO;
+import com.example.jpa01.dto.PageRequestDTO;
+import com.example.jpa01.dto.PageResponseDTO;
 import com.example.jpa01.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,34 +20,35 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
     @GetMapping("/list")
-    public void list (Model model){
-        List<BoardDTO> boardList = boardService.readAllBoards();
-        model.addAttribute("boardList",boardList);
+    public void list(PageRequestDTO pageRequestDTO,Model model) {
+        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+        model.addAttribute("responseDTO", responseDTO);
+        model.addAttribute("pageRequestDTO", pageRequestDTO);
+        //List<BoardDTO> boardList=boardService.readAllBoards();
+        //model.addAttribute("boardList", boardList);
     }
     @GetMapping("/register")
     public void register(){
     }
     @PostMapping("/register")
-    public String register(Board board){
-        boardService.registerBoard(board);
+    public String register(BoardDTO boardDTO) {
+        boardService.registerBoard(boardDTO);
         return "redirect:/board/list";
     }
     @GetMapping({"/read","/modify"})
-    public void read_modify(Long bno, Model model){
+    public void read_modify(Long bno, Model model) {
         BoardDTO boardDTO = boardService.readBoard(bno);
-        model.addAttribute("board",boardDTO);
+        model.addAttribute("board", boardDTO);
     }
-    @PostMapping("/modify")
-    public String modify(BoardDTO boardDTO){
-        boardService.updateBoard(boardDTO);
-        return "redirect:/board/read?bno="+boardDTO.getBno();
-    }
-
     @GetMapping("/remove")
-    public String remove(Long bno){
+    public String remove(Long bno) {
         boardService.deleteBoard(bno);
         return "redirect:/board/list";
     }
-
+    @PostMapping("/modify")
+    public String modify(BoardDTO boardDTO, PageRequestDTO pageRequestDTO) {
+        boardService.updateBoard(boardDTO);
+        return "redirect:/board/read?bno="+boardDTO.getBno();
+    }
 }
 

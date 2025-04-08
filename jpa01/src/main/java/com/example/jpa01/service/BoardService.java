@@ -2,23 +2,19 @@ package com.example.jpa01.service;
 
 import com.example.jpa01.domain.Board;
 import com.example.jpa01.dto.BoardDTO;
-
-import java.util.List;
+import com.example.jpa01.dto.PageRequestDTO;
+import com.example.jpa01.dto.PageResponseDTO;
 
 public interface BoardService {
     void registerBoard(BoardDTO boardDTO);
-
-    void registerBoard(Board boardDTO);
     BoardDTO readBoard(Long id);
     void updateBoard(BoardDTO boardDTO);
-
-    void updateBoard(Board board);
-
     void deleteBoard(Long id);
-    List<BoardDTO> readAllBoards();
+    //List<BoardDTO> readAllBoards();
+    PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
 
-    default Board dtoToEntity(BoardDTO boardDTO){
-        Board board = Board.builder()
+    default Board dtoToEntity(BoardDTO boardDTO) {
+        Board board=Board.builder()
                 .bno(boardDTO.getBno())
                 .title(boardDTO.getTitle())
                 .content(boardDTO.getContent())
@@ -26,8 +22,8 @@ public interface BoardService {
                 .build();
         return board;
     }
-    default BoardDTO entityToDto(Board board){
-        BoardDTO boardDTO = BoardDTO.builder()
+    default BoardDTO entityToDto(Board board) {
+        BoardDTO boardDTO=BoardDTO.builder()
                 .bno(board.getBno())
                 .title(board.getTitle())
                 .content(board.getContent())
@@ -38,5 +34,4 @@ public interface BoardService {
                 .build();
         return boardDTO;
     }
-
 }
