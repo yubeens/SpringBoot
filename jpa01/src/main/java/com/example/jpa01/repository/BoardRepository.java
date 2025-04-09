@@ -10,4 +10,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     //select * from tbl_board where title like %keyword%;
     @Query("select b from Board b where b.title like concat('%',:keyword,'%')")
     Page<Board> searchTitle(String keyword, Pageable pageable);
+
+    Page<Board> searchAll(String[] types, String keyword, Pageable pageable);
 }

@@ -1,0 +1,69 @@
+package org.jyb.jpaboard.service;
+
+import lombok.extern.log4j.Log4j2;
+import org.jyb.jpaboard.domain.BoardEntity;
+import org.jyb.jpaboard.dto.BoardDTO;
+import org.jyb.jpaboard.dto.PageRequestDTO;
+import org.jyb.jpaboard.dto.PageResponseDTO;
+import org.jyb.jpaboard.repository.BoardRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@Log4j2
+public class BoardServiceImpl implements BoardService {
+    @Autowired
+    private BoardRepository boardRepository;
+
+    @Override
+    public void registerBoard(BoardDTO boardDTO) {
+        BoardEntity boardEntity = dtoToEntity(boardDTO);
+        boardRepository.save(boardEntity);
+    }
+
+    @Override
+    public BoardDTO readBoard(Long bno) {
+        BoardEntity boardEntity = boardRepository.findById(bno)
+                .orElse(null); //값이 있으면 값을 꺼내고, 없으면 null을 반환 , get은 값을 무조건 가져옴 (값이 없으면 퍼짐;)
+        boardEntity.updateReadcount();
+        boardRepository.save(boardEntity);
+        return entityToDto(boardEntity);
+    }
+
+    @Override
+    public void updateBoard(BoardDTO boardDTO) {
+        BoardEntity boardEntity = boardRepository.findById(boardDTO.getBno()).get();
+        boardEntity.change(boardDTO.getTitle(), boardDTO.getContent());
+        boardRepository.save(boardEntity);
+    }
+
+    @Override
+    public void deleteBoard(Long bno) {
+        boardRepository.deleteById(bno);
+
+    }
+
+    @Override
+    public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO) {
+        Pageable pageable = pageRequestDTO.getPageable("bno");
+        Page<BoardEntity> result = boardRepository.searchAll(
+                pageRequestDTO.getTypes(),
+                pageRequestDTO.getKeyword(),
+                pageable);
+        List<BoardDTO> dtoList = result.stream()
+                .map(boardEntity -> entityToDto(boardEntity))
+                .collect(Collectors.toList());
+
+        return PageResponseDTO.<BoardDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int) result.getTotalElements())
+                .build();
+    }
+}

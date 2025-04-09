@@ -13,9 +13,8 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import java.util.List;
 
 public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardSearch {
-
-    public BoardSearchImpl() {
-        super(Board.class);
+    public BoardSearchImpl(Class<?> domainClass) {
+        super(domainClass);
     }
 
     @Override
@@ -27,15 +26,36 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
         booleanBuilder.or(board.content.contains("11"));
         booleanBuilder.or(board.author.contains("11"));
         query.where(booleanBuilder);
-        query.where(board.bno.gt(0L));
+        query.groupBy(board.bno.gt(0L));
         this.getQuerydsl().applyPagination(pageable, query);
-        List<Board> result = query.fetch();
-        long count=query.fetchCount();
-        return new PageImpl<Board>(result, pageable, count);
+        List<Board> list = query.fetch();
+        long count = query.fetchCount();
+
+        return new PageImpl<Board>(list, pageable, count);
     }
 
     @Override
-    public Page<Board> searchAll(String[] types, String Keyword, Pageable pageable) {
+    public Page<Board> searchAll(String[] types, String keyword, Pageable pageable) {
+        QBoard board = QBoard.board;
+        JPQLQuery<Board> query = from(board);
+
+        if( (types != null && types.length > 0) && keyword != null){
+            BooleanBuilder booleanBuilder = new BooleanBuilder();
+            for(String type : types){
+                switch(type){
+                    case "title":
+                        booleanBuilder.or(board.title.contains(keyword));
+                        break;
+                    case "c":
+                        booleanBuilder.or(board.content.contains(keyword));
+                        break;
+                    case "w":
+                        booleanBuilder.or(board.author.contains(keyword));
+                }
+            }
+            query.where(booleanBuilder);
+        }
+        query.where(board.bno.gt(0L));
         return null;
     }
 }
